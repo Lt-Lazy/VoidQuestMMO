@@ -1,0 +1,9 @@
+kjøre python kode som lager kartet fra Tiled[
+  python tools/import_tiled.py maps/spenningsbyen.tmj > tools/spenningsbyen_output.txt
+]
+
+Patch Notes:
+- La til inventory
+- La til Minimap
+- La til enemies
+- La til enkel combat
