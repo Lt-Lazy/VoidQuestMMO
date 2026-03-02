@@ -6,6 +6,12 @@
   --z-canvas: 1;
   --z-hud: 20;      /* hearts / hotbar / chat */
   --z-menu: 120;    /* dialog / pause / context */
+  --chat-left: 14px;
+  --chat-bottom: 74px;
+  --chat-height: 170px;
+  --xp-gap: 8px; /* luft over chat */
+  --bank-bg: url("assets/ui/bankWindow.png"); 
+
 }
 
 * { box-sizing: border-box; }
@@ -58,6 +64,20 @@ body {
   color: var(--muted);
   font-size: 12px;
 }
+
+.hud-btn{
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+.hud-btn:hover{ opacity: .9; }
 
 /* --- Hotbar: global nederst på skjermen --- */
 #hotbar {
@@ -140,35 +160,76 @@ body {
   position: fixed; /* eller absolute hvis de ligger inni game-wrap */
 }
 
+.hp-heart {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin: 0 18px;
+}
+
+.hp-heart img {
+  width: 46px;
+  height: 46px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+.hp-heart-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.65), 0 0 6px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
 /* --- Chat log (read-only) --- */
 #chatlog {
   position: fixed;
-  left: 14px;
-  bottom: 74px; /* over hotbar (som har plass via body padding) */
+  left: var(--chat-left);
+  bottom: var(--chat-bottom);
   width: min(420px, 40vw);
-  height: 170px;
+  height: var(--chat-height);
 
   background: rgba(0, 0, 0, 0.55);
   border: 3px solid rgba(255, 255, 255, 0.12);
- 
-  
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-
   overflow: hidden;
   z-index: var(--z-hud);
 }
 
 #chatlog-messages {
-  flex: 1;
-  min-height: 0;   
-  overflow: hidden;
+  height: 100%;
+  overflow-y: auto;
+
+  /* litt padding så scrollbar ikke krasjer med tekst */
+  padding-right: 6px;
+
+  /* valgfritt: gjør at tekst ligger pent */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 6px;
+
+  scrollbar-width: thin; /* Firefox */
+}
+
+/* WebKit scrollbar styling (Chrome/Edge/Safari) */
+#chatlog-messages::-webkit-scrollbar { width: 10px; }
+#chatlog-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0.25); }
+#chatlog-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 10px; }
+
+#chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
 }
 
 .chatline {
@@ -228,6 +289,12 @@ body {
   place-items: center;
   background: rgba(0,0,0,0.65);
   z-index: 100;
+}
+
+
+
+#screen-menu .start-grid {
+  align-self: center;
 }
 
 .screen-card {
@@ -405,7 +472,7 @@ body {
   width: 100%;
   background: rgba(17, 24, 39, 0.92);
   border: 2px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
+
   padding: 10px;
   box-shadow: 0 14px 40px rgba(0,0,0,0.55);
   backdrop-filter: blur(4px);
@@ -489,14 +556,29 @@ body {
   color: rgba(156, 163, 175, 0.9);
 }
 
-/* --- XP pop (top-right) --- */
+/* --- XP pop (top-right) --- ???
 .xp-pop {
   position: fixed;
   top: 10px;
   right: 12px;
   z-index: var(--z-hud);
   pointer-events: none;
+} */
+
+/* XP emblem over chatten */
+#xp-pop {
+  position: absolute;
+
+  /* Plasser det rett over chat-boksen */
+  left: calc(var(--chat-left) + 10px); /* 10px matcher chat padding */
+  bottom: calc(var(--chat-bottom) + var(--chat-height) + var(--xp-gap));
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
 }
+
 
 .xp-pop img {
   width: 34px;
@@ -519,15 +601,15 @@ body {
 /* --- Skills window overlay --- */
 .skills {
   position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
+  inset: auto;
 
-  /* behold dim bakgrunn (valgfritt). 
-     Hvis du vil at den skal oppføre seg mer som inventory (uten dim), sett til transparent. */
-  background: rgba(0,0,0,0.65);
+  left: 14px;
+  top: 74px;  
 
-  z-index: calc(var(--z-menu) + 20);
+  background: transparent;
+  z-index: calc(var(--z-menu) + 25);
+  display: block;
+  pointer-events: none;
 }
 
 .skills.hidden {
@@ -554,15 +636,12 @@ body {
 /* Topp-linje (tittel + close) ligger oppå scrollen */
 .skills-top {
   position: absolute;
-  left: 0;
+  left: 35px;
   right: 0;
-  top: 25px;
+  top: 40px;
 
   height: 60px;           /* matcher ca “toppen” på scrollen */
   display: flex;
-  align-items: center;
-  justify-content: center;
-
   pointer-events: none;   /* så du ikke klikker på toppen ved uhell */
 }
 
@@ -585,19 +664,19 @@ body {
 /* Close-knapp (samme stil som inventory-close) */
 .skills-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 1px;
+  right: 14px;
 
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
 
-  border: 1px solid rgba(0,0,0,0.25);
-  background: rgba(255,255,255,0.15);
-  color: #111;
+  border: 1;
+  background: rgb(255, 58, 58);
+  color: #ffffff;
   cursor: pointer;
   font: inherit;
 
-  pointer-events: auto; /* knappen må være klikkbar */
+  pointer-events: auto;
 }
 
 /* Skills-lista: plasseres inni “innmaten” på scrollen */
@@ -605,8 +684,8 @@ body {
   position: absolute;
 
   /* 👇 TUNE DISSE for perfekt plassering (samme prinsipp som inventory-grid) */
-  left: 18%;
-  right: 18%;
+  left: 10%;
+  right: 25%;
   top: 32%;
   bottom: 18%;
 
@@ -676,6 +755,7 @@ body {
 */
 
 #game-wrap {
+  position: relative;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -719,21 +799,21 @@ body {
 /* Close-knapp */
 .inventory-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 22px;
+  right: 14px;
 
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
 
-  border: 1px solid rgba(0,0,0,0.25);
-  background: rgba(255,255,255,0.15);
-  color: #111;
+  border: 1;
+  background: rgb(255, 58, 58);
+  color: #ffffff;
   cursor: pointer;
   font: inherit;
+
+  pointer-events: auto;
 }
 
-/* Grid-laget som ligger oppå scrollen */
-/* VIKTIG: her finjusterer du plasseringen av inventory på scrollen */
 .inventory-grid {
   position: absolute;
 
@@ -960,16 +1040,6 @@ body {
 }
 
 
-/* ---------------- Equipment window overlay ---------------- 
-.equip {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(0,0,0,0.65);
-  z-index: calc(var(--z-menu) + 26); 
-}*/
-
 #equip-window.equip {
   position: fixed;
   inset: auto;
@@ -1021,8 +1091,8 @@ body {
   height: 36px;
 
   border: 1px solid rgba(0,0,0,0.25);
-  background: rgba(255,255,255,0.15);
-  color: #111;
+  background: rgb(255, 58, 58);
+  color: #ffffff;
   cursor: pointer;
   font: inherit;
   z-index: 50;
@@ -1065,6 +1135,31 @@ body {
   object-fit: contain;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+}
+
+.equip-stats {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 54px;            /* over hint */
+  font-size: 12px;
+  color: rgba(0,0,0,0.8);
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+.equip-stats .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.equip-stats .label {
+  font-weight: 700;
+}
+
+.equip-stats .value {
+  font-weight: 700;
 }
 
 .equip-hint {
@@ -1112,4 +1207,792 @@ body {
   image-rendering: crisp-edges;
   inset: 0;
   background: url("assets/ui/minimapWin.png") no-repeat center / contain;
+}
+
+/* ---------------- LOGIN PORTAL (index.html) ---------------- */
+
+.portal-body {
+  background:
+    radial-gradient(1200px 600px at 50% 20%, rgba(90, 170, 255, 0.16), transparent 60%),
+    radial-gradient(900px 500px at 30% 80%, rgba(255, 220, 120, 0.10), transparent 55%),
+    var(--bg);
+  overflow: auto;
+}
+
+.portal-wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 30px 14px;
+}
+
+.portal-card {
+  width: min(980px, 96vw);
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(10, 14, 20, 0.72);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+}
+
+.portal-top {
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  grid-template-rows: auto auto;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.portal-logo {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  grid-row: 1 / span 2;
+}
+
+.portal-title {
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+
+.portal-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+}
+
+.portal-main {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.portal-panel {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(17, 24, 39, 0.55);
+  padding: 14px;
+}
+
+.portal-panel-title {
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.88);
+}
+
+.portal-label {
+  display: block;
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.70);
+}
+
+.portal-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+  font: inherit;
+}
+
+.portal-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.portal-btn {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.portal-btn.secondary {
+  opacity: 0.85;
+}
+
+.portal-status {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.70);
+}
+
+.portal-side {
+  display: grid;
+  gap: 16px;
+}
+
+.portal-kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.10);
+}
+
+.portal-kv .ok {
+  color: rgba(110, 231, 183, 0.95);
+}
+
+.portal-news {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  padding: 6px 0;
+}
+
+.portal-footer {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+
+@media (max-width: 860px) {
+  .portal-main { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- NEW START HUB (voidquest.html) ---------- */
+
+.start-card{
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+
+#screen-menu{
+  background-image: url("assets/ui/testMenyBack.png");
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+
+  /* Fyll resten */
+  background-color: #0b0f14;
+}
+
+#screen-menu{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Baklag: cover + blur */
+#screen-menu::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url("assets/ui/testMenyBack.png") center / cover no-repeat;
+  filter: blur(12px) brightness(0.8);
+  transform: scale(1.05);
+}
+
+/* Forlag: contain (hele bildet synlig) */
+#screen-menu::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url("assets/ui/testMenyBack.png") center / contain no-repeat;
+}
+
+/* Sørg for at UI ligger over */
+#screen-menu .start-card{
+  position: relative;
+  z-index: 1;
+  background: transparent; /* viktig */
+}
+
+
+
+#screen-menu .start-card {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  padding: 28px;
+  background: transparent;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.start-top{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom: 14px;
+}
+
+.start-brand{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+
+.start-logo{
+  width: 44px;
+  height: 44px;
+  image-rendering: pixelated;
+}
+
+.start-title{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 2px;
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+}
+
+.start-grid{
+  display:grid;
+  grid-template-columns: 220px 1fr 220px;
+  gap: 18px;
+  align-items: center;
+}
+
+.start-left, .start-right{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  text-align: center;
+}
+
+.start-btn{
+  padding: 14px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(12,16,24,0.65);
+  color: rgba(255,255,255,0.9);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 1px;
+  cursor:pointer;
+}
+
+.start-btn:hover{
+  background: rgba(18,24,36,0.75);
+}
+
+.start-btn.secondary{
+  opacity: 0.9;
+}
+
+.start-btn:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.start-center{
+  display:flex;
+  justify-content:center;
+}
+
+.start-preview{
+  width: auto;
+  height: auto;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.start-sprite{
+  width: 350px;
+  height: 700px; 
+
+  image-rendering: pixelated;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.start-nochar{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  opacity: 0.7;
+}
+
+.start-charbox{
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+  margin-bottom: 10px;
+}
+
+.start-charname{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 22px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.start-charlvl{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  opacity: 0.9;
+}
+
+.modal-card{
+  width: min(420px, 92vw);
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(10,14,20,0.98);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+}
+
+.modal-title{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 1px;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.modal-actions{
+  display:flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.menu-btn {
+  width: 320px;
+  height: 180px;
+
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  image-rendering: pixelated;
+
+  /* SKALERING */
+  transform: scale(1);
+  transform-origin: center;
+
+  display: inline-block;
+}
+
+
+.menu-btn span {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+
+.menu-btn-start {
+  background-image: url("assets/ui/menyStartBtn.png");
+}
+
+.menu-btn-settings {
+  background-image: url("assets/ui/menySettingsBtn.png");
+  width: 450px;
+  height: 180px;
+}
+
+.menu-btn-credits {
+  background-image: url("assets/ui/menyCreditsBtn.png");
+  width: 390px;
+  height: 180px;
+}
+
+.menu-btn-credits {
+  background-image: url("assets/ui/menyCreditsBtn.png");
+  width: 390px;
+  height: 180px;
+}
+
+.menu-btn-logout {
+  color: #000000;
+  background-color: rgb(230, 23, 23);
+  height: 50px;
+  left: 20px;
+}
+
+.menu-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.1);
+}
+
+.menu-btn:active {
+  transform: translateY(1px) scale(0.98);
+  filter: brightness(0.9);
+}
+
+/* ---------------- BANK (TEMP UI) ---------------- */
+.bank {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: calc(var(--z-menu) + 25);
+  pointer-events: none;
+}
+
+.bank.hidden { display: none !important; }
+
+.bank-card.bank-skin {
+  position: relative;
+  width: 660px;              /* tilpass til bildet ditt */
+  height: 660px;             /* tilpass til bildet ditt */
+  background: var(--bank-bg) no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+
+  pointer-events: auto; /* gjør at denne tar input */
+}
+
+/* Close-knapp som "hitbox" over X i bildet */
+.bank-card.bank-skin .bank-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  pointer-events: auto;
+
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid rgba(0,0,0,0.25);
+  background: rgb(255, 58, 58);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  z-index: 50;
+}
+
+/* Grid-området: plasseres nøyaktig oppå "slot-området" i bank.png */
+.bank-grid.bank-grid--skinned {
+  position: absolute;
+
+  /* JUSTER disse fire så grid treffer riktig område i bakgrunnsbildet */
+  left: 90px;
+  right: 72px;
+  top: 120px;
+  bottom: 48px;
+
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-auto-rows: 40px;
+  gap: 4px;
+
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+
+  overflow: auto;
+}
+
+.bank-card {
+  width: min(680px, 92vw);
+  height: min(520px, 72vh);
+  background: rgba(17, 24, 39, 0.92);
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.55);
+  pointer-events: auto;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+}
+
+.bank-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-right: 44px;
+}
+
+.bank-title { font-weight: 900; font-size: 18px; }
+.bank-sub { opacity: 0.8; font-size: 12px; }
+
+.bank-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  pointer-events: auto;
+
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid rgba(0,0,0,0.25);
+  background: rgb(255, 58, 58);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  z-index: 50;
+}
+
+.bank-grid {
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(10, 48px);
+  grid-auto-rows: 48px;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+}
+
+.bank-slot {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-style: solid;
+  border-color: rgb(255, 222, 180);
+  border-radius: 0;
+  position: relative;
+}
+
+/* Items */
+.bank-item {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bank-grid.bank-grid--skinned::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.35);
+}
+
+.bank-grid.bank-grid--skinned::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.35);
+  border: 3px solid rgba(0,0,0,0.35);
+  border-radius: 12px;
+}
+
+/* Firefox */
+.bank-grid.bank-grid--skinned {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255,255,255,0.35) rgba(0,0,0,0.35);
+}
+
+.bank-item img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Qty kan være en liten pixel-plate (kan også gjøres helt transparent) */
+.bank-qty {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  padding: 1px 4px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(0,0,0,0.65);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+
+
+#food-cd-img {
+  width: 34px;
+  height: 34px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+
+.char-gender{
+  display:flex;
+  gap:16px;
+  margin:10px 0 14px 0;
+}
+.char-gender label{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.bar-btn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.bar-btn img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none; 
+}
+
+.bar-btn:hover {
+  transform: translateY(-1px);
+}
+
+.bar-btn:active {
+  transform: translateY(0);
+}
+
+/* ---------------- WORLD MAP (FINAL, STABIL) ---------------- */
+
+#map-window {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: calc(var(--z-hud) - 1); /* minimap over */
+  pointer-events: none;
+}
+
+#map-window.hidden {
+  display: none !important;
+}
+
+#map-window .map-card {
+  position: relative;
+  width: 900px;
+  height: 900px;
+
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  pointer-events: auto;
+}
+
+#map-window .map-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#map-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#map-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+#map-window .map-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+
+  width: 36px;
+  height: 36px;
+  background: rgb(255, 58, 58);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ---------------- LOADING SCREEN ---------------- */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.loading-screen.hidden { display: none; }
+
+.loading-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(0px);
+  opacity: 0.9;
+}
+
+.loading-card {
+  position: relative;
+  width: min(520px, calc(100vw - 48px));
+  padding: 18px 18px 14px;
+  background: rgba(129, 129, 129, 0.78);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(6px);
+}
+
+.loading-title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: rgba(63, 170, 60, 0.85);
+}
+
+.loading-meta {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 12px;
+}
+
+.start-preview{
+  position: relative;
+}
+
+.start-sprite-overlay{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }

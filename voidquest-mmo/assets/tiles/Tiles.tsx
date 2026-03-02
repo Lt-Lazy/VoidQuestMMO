@@ -1,41 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="Tiles" tilewidth="32" tileheight="32" tilecount="50" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="Tiles" tilewidth="32" tileheight="32" tilecount="77" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
    <property name="key" value="grass"/>
   </properties>
-  <image source="terrain/grass/grass03.png" width="32" height="32"/>
- </tile>
- <tile id="1">
-  <properties>
-   <property name="key" value="gras2"/>
-  </properties>
-  <image source="terrain/grass/grass02.png" width="32" height="32"/>
- </tile>
- <tile id="2">
-  <properties>
-   <property name="key" value="gras5"/>
-  </properties>
-  <image source="terrain/grass/grassEndDown.png" width="32" height="32"/>
+  <image source="terrain/grass/grass01.png" width="32" height="32"/>
  </tile>
  <tile id="3">
   <properties>
-   <property name="key" value="gras4"/>
+   <property name="key" value="gras2"/>
   </properties>
   <image source="terrain/grass/grassEndLeft.png" width="32" height="32"/>
  </tile>
- <tile id="4">
+ <tile id="2">
   <properties>
-   <property name="key" value="gras6"/>
+   <property name="key" value="gras4"/>
   </properties>
-  <image source="terrain/grass/grassEndRight.png" width="32" height="32"/>
+  <image source="terrain/grass/grassEndDown.png" width="32" height="32"/>
  </tile>
  <tile id="5">
   <properties>
-   <property name="key" value="gras7"/>
+   <property name="key" value="gras5"/>
   </properties>
   <image source="terrain/grass/grassEndTop.png" width="32" height="32"/>
+ </tile>
+ <tile id="4">
+  <properties>
+   <property name="key" value="gras3"/>
+  </properties>
+  <image source="terrain/grass/grassEndRight.png" width="32" height="32"/>
+ </tile>
+ <tile id="53">
+  <properties>
+   <property name="key" value="gras6"/>
+  </properties>
+  <image source="terrain/grass/grassEndDownLeft.png" width="32" height="32"/>
+ </tile>
+ <tile id="54">
+  <properties>
+   <property name="key" value="gras7"/>
+  </properties>
+  <image source="terrain/grass/grassEndDownRight.png" width="32" height="32"/>
+ </tile>
+ <tile id="55">
+  <properties>
+   <property name="key" value="gras8"/>
+  </properties>
+  <image source="terrain/grass/grassEndTopLeft.png" width="32" height="32"/>
+ </tile>
+ <tile id="56">
+  <properties>
+   <property name="key" value="gras9"/>
+  </properties>
+  <image source="terrain/grass/grassEndTopRight.png" width="32" height="32"/>
+ </tile>
+ <tile id="1">
+  <properties>
+   <property name="key" value="gras1"/>
+  </properties>
+  <image source="terrain/grass/grass02.png" width="32" height="32"/>
  </tile>
  <tile id="6">
   <properties>
@@ -121,6 +145,12 @@
   </properties>
   <image source="terrain/water/water0.png" width="32" height="32"/>
  </tile>
+ <tile id="80">
+  <properties>
+   <property name="key" value="fish1"/>
+  </properties>
+  <image source="terrain/water/fish_spot_1/1.png" width="32" height="32"/>
+ </tile>
  <tile id="23">
   <properties>
    <property name="key" value="wate1"/>
@@ -145,17 +175,11 @@
   </properties>
   <image source="house/floorTile.png" width="32" height="32"/>
  </tile>
- <tile id="27">
+ <tile id="30">
   <properties>
-   <property name="key" value="plank"/>
+   <property name="key" value="brrg"/>
   </properties>
-  <image source="house/plankTile.png" width="32" height="32"/>
- </tile>
- <tile id="28">
-  <properties>
-   <property name="key" value="roof"/>
-  </properties>
-  <image source="house/roofTop01.png" width="32" height="32"/>
+  <image source="house/roofTopBarRight.png" width="32" height="32"/>
  </tile>
  <tile id="29">
   <properties>
@@ -163,17 +187,35 @@
   </properties>
   <image source="house/roofTopBarLeft.png" width="32" height="32"/>
  </tile>
- <tile id="30">
+ <tile id="64">
   <properties>
-   <property name="key" value="brrg"/>
+   <property name="key" value="roo2"/>
   </properties>
-  <image source="house/roofTopBarRight.png" width="32" height="32"/>
+  <image source="house/roofTopEndLeft.png" width="32" height="32"/>
+ </tile>
+ <tile id="28">
+  <properties>
+   <property name="key" value="roof"/>
+  </properties>
+  <image source="house/roofTop01.png" width="32" height="32"/>
+ </tile>
+ <tile id="65">
+  <properties>
+   <property name="key" value="roo1"/>
+  </properties>
+  <image source="house/roofTopEndRight.png" width="32" height="32"/>
  </tile>
  <tile id="31">
   <properties>
    <property name="key" value="win01"/>
   </properties>
   <image source="house/window01.png" width="32" height="32"/>
+ </tile>
+ <tile id="27">
+  <properties>
+   <property name="key" value="plank"/>
+  </properties>
+  <image source="house/plankTile.png" width="32" height="32"/>
  </tile>
  <tile id="32">
   <properties>
@@ -186,6 +228,48 @@
    <property name="key" value="winfl"/>
   </properties>
   <image source="house/window01SunFlower.png" width="32" height="32"/>
+ </tile>
+ <tile id="61">
+  <properties>
+   <property name="key" value="plan3"/>
+  </properties>
+  <image source="house/plankLeftGrass.png" width="32" height="32"/>
+ </tile>
+ <tile id="58">
+  <properties>
+   <property name="key" value="plan7"/>
+  </properties>
+  <image source="house/plankGrassEndLeft.png" width="32" height="32"/>
+ </tile>
+ <tile id="57">
+  <properties>
+   <property name="key" value="plan5"/>
+  </properties>
+  <image source="house/plankGrass.png" width="32" height="32"/>
+ </tile>
+ <tile id="60">
+  <properties>
+   <property name="key" value="plan2"/>
+  </properties>
+  <image source="house/plankLeft.png" width="32" height="32"/>
+ </tile>
+ <tile id="63">
+  <properties>
+   <property name="key" value="plan4"/>
+  </properties>
+  <image source="house/plankRightGrass.png" width="32" height="32"/>
+ </tile>
+ <tile id="59">
+  <properties>
+   <property name="key" value="plan6"/>
+  </properties>
+  <image source="house/plankGrassEndRight.png" width="32" height="32"/>
+ </tile>
+ <tile id="62">
+  <properties>
+   <property name="key" value="plan1"/>
+  </properties>
+  <image source="house/plankRight.png" width="32" height="32"/>
  </tile>
  <tile id="34">
   <properties>
@@ -300,5 +384,83 @@
    <property name="key" value="pole7"/>
   </properties>
   <image source="fence/poleUpDownRight.png" width="32" height="32"/>
+ </tile>
+ <tile id="66">
+  <properties>
+   <property name="key" value="brcs"/>
+  </properties>
+  <image source="house/bricks/bricks.png" width="32" height="32"/>
+ </tile>
+ <tile id="67">
+  <properties>
+   <property name="key" value="brc1"/>
+  </properties>
+  <image source="house/bricks/bricks_down_end_left.png" width="32" height="32"/>
+ </tile>
+ <tile id="68">
+  <properties>
+   <property name="key" value="brc2"/>
+  </properties>
+  <image source="house/bricks/bricks_down_end_right.png" width="32" height="32"/>
+ </tile>
+ <tile id="69">
+  <properties>
+   <property name="key" value="brc3"/>
+  </properties>
+  <image source="house/bricks/bricks_down_mid.png" width="32" height="32"/>
+ </tile>
+ <tile id="70">
+  <properties>
+   <property name="key" value="brc4"/>
+  </properties>
+  <image source="house/bricks/bricks_mid_left.png" width="32" height="32"/>
+ </tile>
+ <tile id="71">
+  <properties>
+   <property name="key" value="brc5"/>
+  </properties>
+  <image source="house/bricks/bricks_mid_right.png" width="32" height="32"/>
+ </tile>
+ <tile id="72">
+  <properties>
+   <property name="key" value="brrf"/>
+  </properties>
+  <image source="house/bricks/bricks_roof_top.png" width="32" height="32"/>
+ </tile>
+ <tile id="73">
+  <properties>
+   <property name="key" value="brc6"/>
+  </properties>
+  <image source="house/bricks/bricks_top_end_left.png" width="32" height="32"/>
+ </tile>
+ <tile id="74">
+  <properties>
+   <property name="key" value="brc8"/>
+  </properties>
+  <image source="house/bricks/bricks_top_end_mid.png" width="32" height="32"/>
+ </tile>
+ <tile id="76">
+  <properties>
+   <property name="key" value="brc7"/>
+  </properties>
+  <image source="house/bricks/bricks_top_end_right.png" width="32" height="32"/>
+ </tile>
+ <tile id="77">
+  <properties>
+   <property name="key" value="brdr"/>
+  </properties>
+  <image source="house/bricks/brick_door.png" width="32" height="32"/>
+ </tile>
+ <tile id="78">
+  <properties>
+   <property name="key" value="brwn"/>
+  </properties>
+  <image source="house/bricks/brck_win.png" width="32" height="32"/>
+ </tile>
+ <tile id="79">
+  <properties>
+   <property name="key" value="camfr"/>
+  </properties>
+  <image source="terrain/misc/campfire.png" width="32" height="32"/>
  </tile>
 </tileset>
